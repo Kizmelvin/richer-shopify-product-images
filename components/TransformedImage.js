@@ -7,7 +7,7 @@ import { compass } from "@cloudinary/url-gen/qualifiers/gravity";
 import { TextStyle } from "@cloudinary/url-gen/qualifiers/textStyle";
 
 function TransformedImage({ img_id, title }) {
-  // new cloudinary instance with our cloudName here
+  // new cloudinary instance with our cloudName
   const cld = new Cloudinary({
     cloud: {
       cloudName: "Kizmelvin",

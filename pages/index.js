@@ -1,12 +1,12 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { client } from "../utils";
+import TransformedImage from "../components/TransformedImage";
 
 export default function Home({ products }) {
-  const [images, setImages] = useState([]);
-  const [updatedResult, setUpdatedResult] = useState();
+  const [finalData, setFinalData] = useState();
+  const [updatedResult, setUpdatedResult] = useState([]);
   useEffect(() => {
     setUpdatedResult(
       products.map(async (prop) => {
@@ -29,6 +29,7 @@ export default function Home({ products }) {
             images: [
               {
                 src: file.url,
+                public_id: file.public_id,
               },
             ],
           };
@@ -38,7 +39,13 @@ export default function Home({ products }) {
       })
     );
   }, [products]);
-  console.log(products);
+
+  setTimeout(async () => {
+    await Promise.all(updatedResult).then((values) => {
+      setFinalData(values);
+      // console.log(values);
+    });
+  }, 2000);
 
   return (
     <div className={styles.container}>
@@ -48,7 +55,20 @@ export default function Home({ products }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <button onClick={() => console.log(updatedResult)}>Load data</button>
+        {finalData &&
+          finalData.map((data) => (
+            <div key={data.id}>
+              <h4>{data.title}</h4>
+              <TransformedImage
+                img_id={data.images[0].public_id}
+                title={data.title}
+              />
+              <h2>
+                {" "}
+                <strong># {data.variants[0].price}</strong>{" "}
+              </h2>
+            </div>
+          ))}
       </main>
     </div>
   );
